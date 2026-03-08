@@ -195,6 +195,34 @@ export function formatUrlSize(url: string): string {
 const DEFAULT_PASTE_API = 'https://plannotator-paste.plannotator.workers.dev';
 const DEFAULT_SHARE_BASE = 'https://share.plannotator.ai';
 
+// Detect if running locally and use current origin for share URLs
+function getDefaultShareBase(): string {
+  if (typeof window === 'undefined') return DEFAULT_SHARE_BASE;
+
+  const { origin, hostname } = window.location;
+
+  // Use current origin if running locally
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
+    return origin;
+  }
+
+  return DEFAULT_SHARE_BASE;
+}
+
+// Detect if running locally and use local paste API
+function getDefaultPasteApi(): string {
+  if (typeof window === 'undefined') return DEFAULT_PASTE_API;
+
+  const { origin, hostname } = window.location;
+
+  // Use local origin if running locally (code adds /api/paste later)
+  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
+    return origin;
+  }
+
+  return DEFAULT_PASTE_API;
+}
+
 /**
  * Create a short share URL by posting compressed plan data to the paste service.
  *
@@ -215,8 +243,8 @@ export async function createShortShareUrl(
     shareBaseUrl?: string;
   }
 ): Promise<{ shortUrl: string; id: string } | null> {
-  const pasteApi = options?.pasteApiUrl ?? DEFAULT_PASTE_API;
-  const shareBase = options?.shareBaseUrl ?? DEFAULT_SHARE_BASE;
+  const pasteApi = options?.pasteApiUrl ?? getDefaultPasteApi();
+  const shareBase = options?.shareBaseUrl ?? getDefaultShareBase();
 
   try {
     const payload: SharePayload = {
@@ -263,11 +291,12 @@ export async function createShortShareUrl(
  */
 export async function loadFromPasteId(
   pasteId: string,
-  pasteApiUrl: string = DEFAULT_PASTE_API,
+  pasteApiUrl?: string,
   encryptionKey?: string
 ): Promise<SharePayload | null> {
+  const apiUrl = pasteApiUrl ?? getDefaultPasteApi();
   try {
-    const response = await fetch(`${pasteApiUrl}/api/paste/${pasteId}`, {
+    const response = await fetch(`${apiUrl}/api/paste/${pasteId}`, {
       signal: AbortSignal.timeout(10_000),
     });
 

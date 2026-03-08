@@ -5,6 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 import pkg from '../../package.json';
 
 export default defineConfig({
+  base: '/share/',
   server: {
     port: 3001,
     host: '0.0.0.0',
