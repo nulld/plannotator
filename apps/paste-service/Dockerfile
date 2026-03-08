@@ -10,8 +10,8 @@ COPY package.json bun.lock* ./
 COPY packages ./packages
 COPY apps/portal ./apps/portal
 
-# Install dependencies
-RUN bun install --frozen-lockfile
+# Install dependencies (no frozen lockfile for monorepo builds)
+RUN bun install
 
 # Build portal
 RUN bun run build:portal
@@ -28,7 +28,7 @@ COPY apps/paste-service ./apps/paste-service
 COPY package.json bun.lock* ./
 
 # Install production dependencies
-RUN bun install --frozen-lockfile --production
+RUN bun install --production
 
 # Copy built portal from stage 1
 COPY --from=portal-builder /app/apps/portal/dist ./apps/paste-service/public/share
