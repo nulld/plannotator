@@ -3,14 +3,14 @@ FROM oven/bun:1 AS portal-builder
 
 WORKDIR /app
 
-# Copy package files
-COPY package.json bun.lock* ./
+# Copy package files (skip lockfile - let bun create fresh)
+COPY package.json ./
 
 # Copy workspace packages
 COPY packages ./packages
 COPY apps/portal ./apps/portal
 
-# Install dependencies (no frozen lockfile for monorepo builds)
+# Install dependencies (bun will create new lockfile)
 RUN bun install
 
 # Build portal
@@ -24,10 +24,10 @@ WORKDIR /app
 # Copy paste-service code
 COPY apps/paste-service ./apps/paste-service
 
-# Copy package files for workspace resolution
-COPY package.json bun.lock* ./
+# Copy package files for workspace resolution (skip lockfile)
+COPY package.json ./
 
-# Install production dependencies
+# Install production dependencies (bun will create new lockfile)
 RUN bun install --production
 
 # Copy built portal from stage 1
