@@ -192,35 +192,32 @@ export function formatUrlSize(url: string): string {
 // Short URL support (paste-service backed)
 // ---------------------------------------------------------------------------
 
+// Fallback URLs for standalone mode (when /api/plan is not available)
+// In production, these should be overridden via /api/plan endpoint
 const DEFAULT_PASTE_API = 'https://plannotator-paste.plannotator.workers.dev';
 const DEFAULT_SHARE_BASE = 'https://share.plannotator.ai';
 
-// Detect if running locally and use current origin for share URLs
-function getDefaultShareBase(): string {
-  if (typeof window === 'undefined') return DEFAULT_SHARE_BASE;
-
-  const { origin, hostname } = window.location;
-
-  // Use current origin if running locally
-  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
-    return origin;
-  }
-
-  return DEFAULT_SHARE_BASE;
-}
-
-// Detect if running locally and use local paste API
+/**
+ * Get default paste API URL.
+ * Priority: options param > current origin (self-hosted) > hardcoded fallback
+ */
 function getDefaultPasteApi(): string {
   if (typeof window === 'undefined') return DEFAULT_PASTE_API;
 
-  const { origin, hostname } = window.location;
+  // Use current origin for self-hosted deployments (Railway, custom domains)
+  // Portal should load config from /api/plan, but this is a fallback
+  return window.location.origin;
+}
 
-  // Use local origin if running locally (code adds /api/paste later)
-  if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname.startsWith('192.168.')) {
-    return origin;
-  }
+/**
+ * Get default share base URL.
+ * Priority: options param > current origin (self-hosted) > hardcoded fallback
+ */
+function getDefaultShareBase(): string {
+  if (typeof window === 'undefined') return DEFAULT_SHARE_BASE;
 
-  return DEFAULT_PASTE_API;
+  // Use current origin for self-hosted deployments
+  return window.location.origin;
 }
 
 /**
