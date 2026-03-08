@@ -4,7 +4,7 @@ FROM oven/bun:1 AS portal-builder
 WORKDIR /app
 
 # Copy package files
-COPY package.json bun.lockb ./
+COPY package.json bun.lock* ./
 
 # Copy workspace packages
 COPY packages ./packages
@@ -25,7 +25,7 @@ WORKDIR /app
 COPY apps/paste-service ./apps/paste-service
 
 # Copy package files for workspace resolution
-COPY package.json bun.lockb ./
+COPY package.json bun.lock* ./
 
 # Install production dependencies
 RUN bun install --frozen-lockfile --production
