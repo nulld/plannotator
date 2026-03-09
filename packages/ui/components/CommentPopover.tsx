@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import type { ImageAttachment } from '../types';
 import { AttachmentsButton } from './AttachmentsButton';
+import { useMobile } from '../hooks/useMobile';
 
 interface CommentPopoverProps {
   /** Element to anchor the popover near (re-reads position on scroll) */
@@ -43,6 +44,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
   onSubmit,
   onClose,
 }) => {
+  const isMobile = useMobile();
   const [mode, setMode] = useState<'popover' | 'dialog'>('popover');
   const [text, setText] = useState(initialText);
   const [images, setImages] = useState<ImageAttachment[]>([]);
@@ -129,18 +131,26 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
   const isMac = navigator.platform?.includes('Mac') ?? navigator.userAgent?.includes('Mac');
   const shortcutHint = isMac ? '\u2318\u21B5' : 'Ctrl+\u21B5';
 
-  if (mode === 'dialog') {
+  // Mobile: always use bottom sheet (dialog-like but positioned at bottom)
+  if (isMobile || mode === 'dialog') {
     return createPortal(
-      <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
+      <div className={`fixed inset-0 z-[100] ${isMobile ? 'flex items-end' : 'flex items-center justify-center p-4'}`}>
         {/* Backdrop */}
-        <div className="absolute inset-0 bg-background/80 backdrop-blur-sm" />
+        <div
+          className="absolute inset-0 bg-background/80 backdrop-blur-sm"
+          onClick={onClose}
+        />
 
-        {/* Dialog card */}
+        {/* Dialog card / Bottom sheet */}
         <div
           ref={popoverRef}
-          className="relative w-full max-w-xl bg-popover border border-border rounded-xl shadow-2xl flex flex-col"
+          className={`relative w-full bg-popover border border-border shadow-2xl flex flex-col ${
+            isMobile
+              ? 'rounded-t-2xl border-t border-x max-h-[85vh]'
+              : 'max-w-xl rounded-xl'
+          }`}
           style={{
-            animation: 'comment-dialog-in 0.15s ease-out',
+            animation: isMobile ? 'comment-sheet-in 0.2s ease-out' : 'comment-dialog-in 0.15s ease-out',
           }}
           onMouseDown={(e) => e.stopPropagation()}
         >
@@ -149,7 +159,18 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               from { opacity: 0; transform: scale(0.95); }
               to { opacity: 1; transform: scale(1); }
             }
+            @keyframes comment-sheet-in {
+              from { opacity: 0; transform: translateY(100%); }
+              to { opacity: 1; transform: translateY(0); }
+            }
           `}</style>
+
+          {/* Mobile drag handle */}
+          {isMobile && (
+            <div className="pt-3 pb-1 flex justify-center md:hidden">
+              <div className="w-12 h-1 rounded-full bg-border/50" />
+            </div>
+          )}
 
           {/* Header */}
           <div className="flex items-center justify-between px-4 py-3 border-b border-border/50">
@@ -157,13 +178,15 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               {headerLabel}
             </span>
             <div className="flex items-center gap-1">
-              <button
-                onClick={() => setMode('popover')}
-                className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                title="Collapse"
-              >
-                <CollapseIcon />
-              </button>
+              {!isMobile && (
+                <button
+                  onClick={() => setMode('popover')}
+                  className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                  title="Collapse"
+                >
+                  <CollapseIcon />
+                </button>
+              )}
               <button
                 onClick={onClose}
                 className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
@@ -175,14 +198,16 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
           </div>
 
           {/* Textarea */}
-          <div className="px-4 py-3 flex-1">
+          <div className="px-4 py-3 flex-1 overflow-y-auto">
             <textarea
               ref={textareaRef}
               value={text}
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={isGlobal ? 'Add a global comment...' : 'Add a comment...'}
-              className="w-full bg-transparent text-base md:text-sm placeholder:text-muted-foreground resize-none focus:outline-none min-h-48 max-h-96 px-1 py-0.5"
+              className={`w-full bg-transparent text-base md:text-sm placeholder:text-muted-foreground resize-none focus:outline-none px-1 py-0.5 ${
+                isMobile ? 'min-h-32' : 'min-h-48 max-h-96'
+              }`}
               style={{ fieldSizing: 'content' } as React.CSSProperties}
             />
           </div>
