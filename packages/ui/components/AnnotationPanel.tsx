@@ -17,6 +17,8 @@ interface PanelProps {
   width?: number;
   editorAnnotations?: EditorAnnotation[];
   onDeleteEditorAnnotation?: (id: string) => void;
+  onClose?: () => void;
+  isMobile?: boolean;
 }
 
 export const AnnotationPanel: React.FC<PanelProps> = ({
@@ -32,6 +34,8 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
   width,
   editorAnnotations,
   onDeleteEditorAnnotation,
+  onClose,
+  isMobile = false,
 }) => {
   const [copied, setCopied] = useState(false);
   const sortedAnnotations = [...annotations].sort((a, b) => a.createdA - b.createdA);
@@ -51,18 +55,46 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
   if (!isOpen) return null;
 
   return (
-    <aside className="border-l border-border/50 bg-card/30 backdrop-blur-sm flex flex-col flex-shrink-0" style={{ width: width ?? 288 }}>
-      {/* Header */}
-      <div className="p-3 border-b border-border/50">
-        <div className="flex items-center justify-between">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-            Annotations
-          </h2>
-          <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
-            {totalCount}
-          </span>
+    <>
+      {/* Mobile backdrop */}
+      {isMobile && (
+        <div
+          className="fixed inset-0 bg-background/80 backdrop-blur-sm z-40 md:hidden"
+          onClick={onClose}
+        />
+      )}
+
+      <aside
+        className={`
+          border-l border-border/50 bg-card/30 backdrop-blur-sm flex flex-col flex-shrink-0
+          ${isMobile ? 'fixed right-0 top-0 bottom-0 z-50 md:relative md:z-auto shadow-2xl' : ''}
+        `}
+        style={{ width: isMobile ? '85%' : (width ?? 288), maxWidth: isMobile ? '400px' : undefined }}
+      >
+        {/* Header */}
+        <div className="p-3 border-b border-border/50">
+          <div className="flex items-center justify-between">
+            <h2 className="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+              Annotations
+            </h2>
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-mono bg-muted px-1.5 py-0.5 rounded text-muted-foreground">
+                {totalCount}
+              </span>
+              {isMobile && onClose && (
+                <button
+                  onClick={onClose}
+                  className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-all md:hidden"
+                  aria-label="Close"
+                >
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
-      </div>
 
       {/* List */}
       <div className="flex-1 overflow-y-auto p-2 space-y-1.5">
