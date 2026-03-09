@@ -17,7 +17,6 @@ import { useAgents } from '@plannotator/ui/hooks/useAgents';
 import { useActiveSection } from '@plannotator/ui/hooks/useActiveSection';
 import { storage } from '@plannotator/ui/utils/storage';
 import { CompletionOverlay } from '@plannotator/ui/components/CompletionOverlay';
-import { UpdateBanner } from '@plannotator/ui/components/UpdateBanner';
 import { getObsidianSettings, getEffectiveVaultPath, isObsidianConfigured, CUSTOM_PATH_SENTINEL } from '@plannotator/ui/utils/obsidian';
 import { getBearSettings } from '@plannotator/ui/utils/bear';
 import { getDefaultNotesApp } from '@plannotator/ui/utils/defaultNotesApp';
@@ -1626,9 +1625,6 @@ const App: React.FC = () => {
           }
           agentLabel={agentName}
         />
-
-        {/* Update notification */}
-        <UpdateBanner origin={origin} />
 
         {/* Image Annotator for pasted images */}
         <ImageAnnotator

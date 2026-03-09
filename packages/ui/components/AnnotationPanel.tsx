@@ -66,14 +66,23 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
 
       <aside
         className={`
-          border-l border-border/50 bg-card/30 backdrop-blur-sm flex flex-col flex-shrink-0
-          ${isMobile ? 'fixed right-0 top-0 z-50 md:relative md:z-auto shadow-2xl h-dvh max-h-dvh' : ''}
+          bg-card/30 backdrop-blur-sm flex flex-col flex-shrink-0
+          ${isMobile
+            ? 'fixed bottom-0 left-0 right-0 z-50 md:relative md:z-auto shadow-2xl rounded-t-2xl border-t border-x border-border/50 max-h-[80vh]'
+            : 'border-l border-border/50'
+          }
         `}
         style={{
-          width: isMobile ? '85%' : (width ?? 288),
-          maxWidth: isMobile ? '400px' : undefined,
+          width: isMobile ? undefined : (width ?? 288),
         }}
       >
+        {/* Mobile drag handle */}
+        {isMobile && (
+          <div className="pt-3 pb-1 flex justify-center md:hidden">
+            <div className="w-12 h-1 rounded-full bg-border/50" />
+          </div>
+        )}
+
         {/* Header */}
         <div className="p-3 border-b border-border/50">
           <div className="flex items-center justify-between">
