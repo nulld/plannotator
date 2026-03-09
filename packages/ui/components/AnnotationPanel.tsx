@@ -67,13 +67,11 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
       <aside
         className={`
           border-l border-border/50 bg-card/30 backdrop-blur-sm flex flex-col flex-shrink-0
-          ${isMobile ? 'fixed right-0 top-0 z-50 md:relative md:z-auto shadow-2xl' : ''}
+          ${isMobile ? 'fixed right-0 top-0 z-50 md:relative md:z-auto shadow-2xl h-dvh max-h-dvh' : ''}
         `}
         style={{
           width: isMobile ? '85%' : (width ?? 288),
           maxWidth: isMobile ? '400px' : undefined,
-          height: isMobile ? '100vh' : undefined,
-          maxHeight: isMobile ? '100vh' : undefined,
         }}
       >
         {/* Header */}

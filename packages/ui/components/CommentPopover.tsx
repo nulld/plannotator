@@ -182,7 +182,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               onChange={(e) => setText(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder={isGlobal ? 'Add a global comment...' : 'Add a comment...'}
-              className="w-full bg-transparent text-sm placeholder:text-muted-foreground resize-none focus:outline-none min-h-48 max-h-96 px-1 py-0.5"
+              className="w-full bg-transparent text-base md:text-sm placeholder:text-muted-foreground resize-none focus:outline-none min-h-48 max-h-96 px-1 py-0.5"
               style={{ fieldSizing: 'content' } as React.CSSProperties}
             />
           </div>
@@ -273,7 +273,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
           onChange={(e) => setText(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder={isGlobal ? 'Add a global comment...' : 'Add a comment...'}
-          className="w-full bg-transparent text-sm placeholder:text-muted-foreground resize-none focus:outline-none max-h-64 min-h-[4.5rem] px-1 py-0.5"
+          className="w-full bg-transparent text-base md:text-sm placeholder:text-muted-foreground resize-none focus:outline-none max-h-64 min-h-[4.5rem] px-1 py-0.5"
           style={{ fieldSizing: 'content' } as React.CSSProperties}
         />
       </div>
