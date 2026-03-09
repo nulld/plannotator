@@ -158,7 +158,7 @@ if (args[0] === "sessions") {
       handleReviewServerReady(url, isRemote, port);
 
       if (isRemote && sharingEnabled && rawPatch) {
-        await writeRemoteShareLink(rawPatch, shareBaseUrl, "review changes", "diff only").catch(() => {});
+        await writeRemoteShareLink(rawPatch, shareBaseUrl, "review changes", "diff only", pasteApiUrl).catch(() => {});
       }
     },
   });
@@ -243,7 +243,7 @@ if (args[0] === "sessions") {
       handleAnnotateServerReady(url, isRemote, port);
 
       if (isRemote && sharingEnabled) {
-        await writeRemoteShareLink(markdown, shareBaseUrl, "annotate", "document only").catch(() => {});
+        await writeRemoteShareLink(markdown, shareBaseUrl, "annotate", "document only", pasteApiUrl).catch(() => {});
       }
     },
   });
@@ -310,7 +310,7 @@ if (args[0] === "sessions") {
       handleServerReady(url, isRemote, port);
 
       if (isRemote && sharingEnabled) {
-        await writeRemoteShareLink(planContent, shareBaseUrl, "review the plan", "plan only").catch(() => {});
+        await writeRemoteShareLink(planContent, shareBaseUrl, "review the plan", "plan only", pasteApiUrl).catch(() => {});
       }
     },
   });
