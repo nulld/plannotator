@@ -169,6 +169,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
         </div>
       )}
     </aside>
+    </>
   );
 };
 
