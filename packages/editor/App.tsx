@@ -946,7 +946,10 @@ const App: React.FC = () => {
   const handleAddAnnotation = (ann: Annotation) => {
     setAnnotations(prev => [...prev, ann]);
     setSelectedAnnotationId(ann.id);
-    setIsPanelOpen(true);
+    // Don't auto-open panel on mobile to avoid keyboard issues
+    if (!isMobile) {
+      setIsPanelOpen(true);
+    }
   };
 
   const handleDeleteAnnotation = (id: string) => {

@@ -67,9 +67,14 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
       <aside
         className={`
           border-l border-border/50 bg-card/30 backdrop-blur-sm flex flex-col flex-shrink-0
-          ${isMobile ? 'fixed right-0 top-0 bottom-0 z-50 md:relative md:z-auto shadow-2xl' : ''}
+          ${isMobile ? 'fixed right-0 top-0 z-50 md:relative md:z-auto shadow-2xl' : ''}
         `}
-        style={{ width: isMobile ? '85%' : (width ?? 288), maxWidth: isMobile ? '400px' : undefined }}
+        style={{
+          width: isMobile ? '85%' : (width ?? 288),
+          maxWidth: isMobile ? '400px' : undefined,
+          height: isMobile ? '100vh' : undefined,
+          maxHeight: isMobile ? '100vh' : undefined,
+        }}
       >
         {/* Header */}
         <div className="p-3 border-b border-border/50">
@@ -377,7 +382,7 @@ const AnnotationCard: React.FC<{
               onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditText(e.target.value)}
               onKeyDown={handleKeyDown}
               onClick={(e: React.MouseEvent<HTMLTextAreaElement>) => e.stopPropagation()}
-              className="w-full text-xs text-foreground/90 pl-2 border-l-2 border-purple-500/50 bg-background border border-border rounded px-2 py-1.5 resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+              className="w-full text-base md:text-xs text-foreground/90 pl-2 border-l-2 border-purple-500/50 bg-background border border-border rounded px-2 py-1.5 resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
               rows={Math.min(editText.split('\n').length + 1, 8)}
             />
             <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
@@ -420,7 +425,7 @@ const AnnotationCard: React.FC<{
                   onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setEditText(e.target.value)}
                   onKeyDown={handleKeyDown}
                   onClick={(e: React.MouseEvent<HTMLTextAreaElement>) => e.stopPropagation()}
-                  className="w-full text-xs text-foreground/90 pl-2 border-l-2 border-primary/50 bg-background border border-border rounded px-2 py-1.5 resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full text-base md:text-xs text-foreground/90 pl-2 border-l-2 border-primary/50 bg-background border border-border rounded px-2 py-1.5 resize-none focus:outline-none focus:ring-2 focus:ring-primary/50"
                   rows={Math.min(editText.split('\n').length + 1, 8)}
                 />
                 <div className="flex items-center gap-2 text-[10px] text-muted-foreground">
